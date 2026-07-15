@@ -594,7 +594,7 @@ function [b, R, S11, Var_HC, Var_BC, Var_BCsr, Var_BCsc, Var_BCf, Var_BCfQ] = TS
     % C_tilde_2 (Upper left block)
     % Formula: T^-1 * (V2' * Omega * V2) - C_tilde_1
     V2_Omega_V2 = V2' * (e2 .* V2); % V2' * Omega * V2
-    C2_upper = (V2_Omega_V2 / T) - C1_upper;
+    C2_upper = (V2_Omega_V2 / T) - 3 * C1_upper;   % factor-3 fix (2026-07-14): under Gaussianity E[u^2 v^2]=sig^2 w^2 + 3 phi^2 sig^4, so T^-1 V2'diag(u^2)V2 -> C2 + 3*C1; the old raw-C1 was contaminated by +2*C1
     
     % Embed into full (G-1+k) matrices
     C_tilde_1 = zeros(G-1+k, G-1+k);
@@ -732,7 +732,7 @@ function [b, R, S11, Var_HC, Var_BC] = fuller_variance_BC_HC(y, Y2, X, X1, k, T,
 
     C1_upper = (m4 / 3) * (pi_hat * pi_hat');
     V2_Omega_V2 = V2' * (e2 .* V2);
-    C2_upper = (V2_Omega_V2 / T) - C1_upper;
+    C2_upper = (V2_Omega_V2 / T) - 3 * C1_upper;   % factor-3 fix (2026-07-14): under Gaussianity E[u^2 v^2]=sig^2 w^2 + 3 phi^2 sig^4, so T^-1 V2'diag(u^2)V2 -> C2 + 3*C1; the old raw-C1 was contaminated by +2*C1
 
     C_tilde_1 = zeros(G-1+k, G-1+k);
     C_tilde_1(1:G-1, 1:G-1) = C1_upper;
